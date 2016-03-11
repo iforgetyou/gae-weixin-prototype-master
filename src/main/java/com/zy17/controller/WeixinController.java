@@ -1,7 +1,9 @@
 package com.zy17.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.alibaba.fastjson.JSON;
+import com.zy17.service.WeixinMsgHandle;
 import com.zy17.weixin.bean.message.EventMessage;
 import com.zy17.weixin.bean.xmlmessage.XMLMessage;
 import com.zy17.weixin.bean.xmlmessage.XMLTextMessage;
 import com.zy17.weixin.util.SignatureUtil;
+import com.zy17.weixin.util.XMLConverUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +33,8 @@ public class WeixinController {
 
     //从官方获取
     private String token = "omcUjifXTydnWzxUSwwtOClqa8luskvQ";
+    @Autowired
+   private Map<String, WeixinMsgHandle> msgHandleMap;
 
     @RequestMapping(method = RequestMethod.GET)
     public
@@ -70,20 +77,21 @@ public class WeixinController {
 
         // 解析消息
         //        EventMessage eventMessage = XMLConverUtil.convertToObject(EventMessage.class, eventMessage);
-        log.debug("recieve msgId :{},msgType:{}", eventMessage.getMsgId(), eventMessage.getMsgType());
+        log.debug("recieve msg:{}", XMLConverUtil.convertToXML(eventMessage));
         // 消息排重
         String key = eventMessage.getFromUserName() + "_"
                 + eventMessage.getToUserName() + "_"
                 + eventMessage.getMsgId() + "_"
                 + eventMessage.getCreateTime();
+
         // 业务处理
-        // 创建回复
-        XMLMessage xmlTextMessage = new XMLTextMessage(
-                eventMessage.getFromUserName(),
-                eventMessage.getToUserName(),
-                "你好");
-        //回复
-        return xmlTextMessage.toXML();
+        WeixinMsgHandle msgHandle = msgHandleMap.get(eventMessage.getMsgType());
+        if (msgHandle != null && msgHandle.canHandle(eventMessage)) {
+            return msgHandle.handleMsg(eventMessage);
+        } else {
+            return msgHandleMap.get("default").handleMsg(eventMessage);
+        }
+
     }
 
 }

@@ -25,12 +25,10 @@
     <util:properties id="wxProperties"
                      location="classpath:/wx.properties"/>
 
-    <bean id="pmf" class="org.datanucleus.jdo.JDOPersistenceManagerFactory" destroy-method="close">
-        <!--<property name="connectionFactory" ref="dataSource"/>-->
-        <property name="connectionURL" value="appengine"/>
-        <property name="nontransactionalWrite" value="true"/>
-        <property name="retainValues" value="true"/>
-        <property name="nontransactionalRead" value="true"/>
-    </bean>
+    <!--微信消息处理-->
+    <util:map id="msgHandleMap">
+        <entry key="default" value-ref="default"/>
+        <entry key="text" value-ref="text"/>
+    </util:map>
 
 </beans>

@@ -1,11 +1,11 @@
 package com.zy17.model;
 
-import lombok.Data;
-
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
+import lombok.Data;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,6 +16,9 @@ import javax.jdo.annotations.Persistent;
  */
 
 @Data
-public class User extends Base {
-    private String userName;
+public class ImageItem extends Base {
+    private String openId;
+    private String mediaId;
+    private String picUrl;
+    private String textTag;
 }

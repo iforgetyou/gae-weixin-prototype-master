@@ -4,40 +4,21 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.jdo.annotations.*;
+
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Date;
+
+import com.google.appengine.api.datastore.Entity;
 
 @Slf4j
 @Data
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public class Base implements Serializable {
-
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
-    private String encodedKey;
-
-//    @Persistent
-//    @Extension(vendorName="datanucleus", key="gae.pk-name", value="true")
-//    private String keyName;
-
-    @Persistent
-    private Date createdAt;
-    @Persistent
+    private Date createdAt = new Date();
     private Date updatedAt;
 
     public Base() {
     }
-
-    public String getEncodedKey() {
-        return encodedKey;
-    }
-
-    public void setEncodedKey(String encodedKey) {
-        this.encodedKey = encodedKey;
-    }
-
 
     public Date getCreatedAt() {
         return createdAt;
@@ -55,4 +36,14 @@ public class Base implements Serializable {
         this.updatedAt = updatedAt;
     }
 
+    public Entity genEntity() throws IllegalAccessException {
+        Entity entity = new Entity(this.getClass().getSimpleName());
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            Object value = field.get(this);
+            entity.setProperty(field.getName(), value);
+        }
+        return entity;
+    }
 }
