@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.zy17.model.Base;
@@ -31,15 +32,16 @@ public class BaseDaoImpl<T extends Base> {
     //        }
     //    }
 
-    public T save(T obj) {
+    public Key save(T obj) {
+        Key key = null;
         try {
             Entity entity = obj.genEntity();
-            Key key = datastore.put(entity);
+            key = datastore.put(entity);
             log.debug(entity.toString());
         } catch (IllegalAccessException e) {
             log.error("save entity error:", e);
         }
-        return obj;
+        return key;
     }
 
     public List<T> find(Query.Filter filter) {
@@ -60,13 +62,36 @@ public class BaseDaoImpl<T extends Base> {
         return results;
     }
 
-    T parseEntity(Entity entity) throws IllegalAccessException, InstantiationException {
+    // 通过id查找
+    public T findById(String id) {
+        Key key = KeyFactory.createKey(getType().getSimpleName(), Long.valueOf(id));
+        Query.Filter keyFilter =
+                new Query.FilterPredicate(Entity.KEY_RESERVED_PROPERTY,
+                        Query.FilterOperator.EQUAL,
+                        key);
+        Query q =
+                new Query(getType().getSimpleName()).setFilter(keyFilter).addSort("ID", Query.SortDirection.DESCENDING);
+        log.debug("query:{}", q.toString());
+        PreparedQuery pq = datastore.prepare(q);
+        Entity entity = pq.asSingleEntity();
+        if (entity == null) {
+            return null;
+        }
+        return parseEntity(entity);
+    }
+
+    public T parseEntity(Entity entity) {
         log.debug(entity.toString());
-        T t = (T) getType().newInstance();
-        Field[] declaredFields = getType().getDeclaredFields();
-        for (Field declaredField : declaredFields) {
-            declaredField.setAccessible(true);
-            declaredField.set(t, entity.getProperty(declaredField.getName()));
+        T t = null;
+        try {
+            t = (T) getType().newInstance();
+            Field[] declaredFields = getType().getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                declaredField.setAccessible(true);
+                declaredField.set(t, entity.getProperty(declaredField.getName()));
+            }
+        } catch (Exception e) {
+            log.error("parse entity error", e);
         }
         return t;
     }
