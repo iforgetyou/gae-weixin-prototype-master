@@ -5,54 +5,55 @@ package com.zy17.weixin.bean.menu;
 
 import java.util.List;
 
-public class Button{
+public class Button {
+    public static final String CLICK = "click";
+    public static final String VIEW = "view";
 
-	private String type;	//click|view
-	private String name;
-	private String key;
-	private String url;
+    private String type;    //click|view
+    private String name;
+    private String key;
+    private String url;
 
-	private List<Button> sub_button;
+    private List<Button> sub_button;
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public List<Button> getSub_button() {
-		return sub_button;
-	}
+    public List<Button> getSub_button() {
+        return sub_button;
+    }
 
-	public void setSub_button(List<Button> subButton) {
-		sub_button = subButton;
-	}
-
+    public void setSub_button(List<Button> subButton) {
+        sub_button = subButton;
+    }
 
 }

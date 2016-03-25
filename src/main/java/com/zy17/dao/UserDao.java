@@ -1,7 +1,7 @@
 package com.zy17.dao;
 
-import com.zy17.model.User;
+import com.zy17.entity.UserEntity;
 
 public interface UserDao {
-    void saveUser(User user);
+    void saveUser(UserEntity userEntity);
 }

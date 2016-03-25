@@ -1,6 +1,6 @@
 package com.zy17.controller;
 
-import com.zy17.model.User;
+import com.zy17.entity.UserEntity;
 import com.zy17.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     public
     @ResponseBody
-    User getUser() {
-        User user = new User();
-        user.setUserName("岩仔3");
-        log.debug(user.toString());
-        return user;
+    UserEntity getUser() {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserName("岩仔3");
+        log.debug(userEntity.toString());
+        return userEntity;
     }
 
 
@@ -35,9 +35,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public
     @ResponseBody
-    void createUser(@RequestBody User user) {
-        userService.createUser(user);
-        log.debug("create" + user);
+    void createUser(@RequestBody UserEntity userEntity) {
+        userService.createUser(userEntity);
+        log.debug("create" + userEntity);
     }
 
 }

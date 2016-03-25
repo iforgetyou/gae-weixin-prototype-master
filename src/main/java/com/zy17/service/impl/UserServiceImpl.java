@@ -1,8 +1,7 @@
 package com.zy17.service.impl;
 
 import com.zy17.dao.UserDao;
-import com.zy17.dao.impl.UserDaoImpl;
-import com.zy17.model.User;
+import com.zy17.entity.UserEntity;
 import com.zy17.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Transactional
-    public void createUser(User user) {
+    public void createUser(UserEntity userEntity) {
         // 调用持久层，完成数据的保存
-        userDao.saveUser(user);
+        userDao.saveUser(userEntity);
     }
 }

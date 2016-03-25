@@ -1,11 +1,15 @@
 package com.zy17.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.alibaba.fastjson.JSON;
 import com.zy17.service.WeixinMsgHandle;
 import com.zy17.weixin.bean.message.EventMessage;
 import com.zy17.weixin.bean.xmlmessage.XMLMessage;
@@ -33,8 +36,8 @@ public class WeixinController {
 
     //从官方获取
     private String token = "omcUjifXTydnWzxUSwwtOClqa8luskvQ";
-    @Autowired
-   private Map<String, WeixinMsgHandle> msgHandleMap;
+    @Resource(name = "msgHandlers")
+    private List<WeixinMsgHandle> msgHandlers;
 
     @RequestMapping(method = RequestMethod.GET)
     public
@@ -67,7 +70,6 @@ public class WeixinController {
                     @RequestParam(value = "timestamp", required = false) String timestamp,
                     @RequestParam(value = "nonce", required = false) String nonce,
                     @RequestBody(required = false) EventMessage eventMessage) throws UnsupportedEncodingException {
-        log.debug("post request:" + timestamp);
         //验证请求签名
         if (!signature.equals(SignatureUtil.generateEventMessageSignature(token, timestamp, nonce))) {
             log.warn("The request signature is invalid");
@@ -76,7 +78,6 @@ public class WeixinController {
         }
 
         // 解析消息
-        //        EventMessage eventMessage = XMLConverUtil.convertToObject(EventMessage.class, eventMessage);
         log.debug("recieve msg:{}", XMLConverUtil.convertToXML(eventMessage));
         // 消息排重
         String key = eventMessage.getFromUserName() + "_"
@@ -85,13 +86,40 @@ public class WeixinController {
                 + eventMessage.getCreateTime();
 
         // 业务处理
-        WeixinMsgHandle msgHandle = msgHandleMap.get(eventMessage.getMsgType());
-        if (msgHandle != null && msgHandle.canHandle(eventMessage)) {
-            return msgHandle.handleMsg(eventMessage);
-        } else {
-            return msgHandleMap.get("default").handleMsg(eventMessage);
+        try {
+            for (WeixinMsgHandle msgHandler : msgHandlers) {
+                if (msgHandler.canHandle(eventMessage)) {
+                    String handleResult = msgHandler.handleMsg(eventMessage);
+                    if (StringUtils.isNotBlank(handleResult)) {
+                        return handleResult;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("business error", e);
+            // 创建回复
+            XMLMessage errorMsg = new XMLTextMessage(
+                    eventMessage.getFromUserName(),
+                    eventMessage.getToUserName(),
+                    "Ծ‸Ծ 我去找开发修bug了");
+            return errorMsg.toXML();
         }
 
+        // 创建默认回复
+        XMLMessage xmlTextMessage = new XMLTextMessage(
+                eventMessage.getFromUserName(),
+                eventMessage.getToUserName(),
+                "收到");
+        String result = xmlTextMessage.toXML();
+        log.debug("response:{}", result);
+        return result;
     }
 
+    @ExceptionHandler
+    public
+    @ResponseBody
+    String exp(HttpServletRequest request, Exception ex) {
+        log.error("统一异常处理", ex);
+        return "";
+    }
 }

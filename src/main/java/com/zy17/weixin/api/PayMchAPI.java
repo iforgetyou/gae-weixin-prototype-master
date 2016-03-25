@@ -81,7 +81,7 @@ public class PayMchAPI extends BaseAPI {
 		}
 		String unifiedorderXML = XMLConverUtil.convertToXML(unifiedorder);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(xmlHeader)
+										.addHeader(xmlHeader)
 										.setUri(MCH_URI + "/pay/unifiedorder")
 										.setEntity(new StringEntity(unifiedorderXML, Charset.forName("utf-8")))
 										.build();
@@ -100,7 +100,7 @@ public class PayMchAPI extends BaseAPI {
 		micropay.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(micropay);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/pay/micropay")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();
@@ -119,7 +119,7 @@ public class PayMchAPI extends BaseAPI {
 		mchOrderquery.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(mchOrderquery);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/pay/orderquery")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();
@@ -140,7 +140,7 @@ public class PayMchAPI extends BaseAPI {
 		closeorder.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(closeorder);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/pay/closeorder")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();
@@ -164,11 +164,12 @@ public class PayMchAPI extends BaseAPI {
 		secapiPayRefund.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( secapiPayRefund);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/secapi/pay/refund")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
-		return LocalHttpClient.keyStoreExecuteXmlResult(secapiPayRefund.getMch_id(),httpUriRequest,SecapiPayRefundResult.class);
+		return LocalHttpClient
+				.keyStoreExecuteXmlResult(secapiPayRefund.getMch_id(),httpUriRequest,SecapiPayRefundResult.class);
 	}
 
 	/**
@@ -184,7 +185,7 @@ public class PayMchAPI extends BaseAPI {
 		mchReverse.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( mchReverse);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/secapi/pay/reverse")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -206,7 +207,7 @@ public class PayMchAPI extends BaseAPI {
 		refundquery.setSign(sign);
 		String refundqueryXML = XMLConverUtil.convertToXML(refundquery);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/pay/refundquery")
 				.setEntity(new StringEntity(refundqueryXML, Charset.forName("utf-8")))
 				.build();
@@ -225,7 +226,7 @@ public class PayMchAPI extends BaseAPI {
 		downloadbill.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(downloadbill);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/pay/downloadbill")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();
@@ -264,7 +265,7 @@ public class PayMchAPI extends BaseAPI {
 		shorturl.setSign(sign);
 		String shorturlXML = XMLConverUtil.convertToXML(shorturl);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/tools/shorturl")
 				.setEntity(new StringEntity(shorturlXML, Charset.forName("utf-8")))
 				.build();
@@ -283,7 +284,7 @@ public class PayMchAPI extends BaseAPI {
 		report.setSign(sign);
 		String shorturlXML = XMLConverUtil.convertToXML(report);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/payitil/report")
 				.setEntity(new StringEntity(shorturlXML, Charset.forName("utf-8")))
 				.build();
@@ -302,7 +303,7 @@ public class PayMchAPI extends BaseAPI {
 		sendCoupon.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( sendCoupon);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/mmpaymkttransfers/send_coupon")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -321,7 +322,7 @@ public class PayMchAPI extends BaseAPI {
 		queryCouponStock.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( queryCouponStock);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/mmpaymkttransfers/query_coupon_stock")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -340,7 +341,7 @@ public class PayMchAPI extends BaseAPI {
 		queryCoupon.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( queryCoupon);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/promotion/query_coupon")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -367,7 +368,7 @@ public class PayMchAPI extends BaseAPI {
 		sendredpack.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( sendredpack);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/mmpaymkttransfers/sendredpack")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -386,7 +387,7 @@ public class PayMchAPI extends BaseAPI {
 		sendgroupredpack.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( sendgroupredpack);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/mmpaymkttransfers/sendgroupredpack")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -406,7 +407,7 @@ public class PayMchAPI extends BaseAPI {
 		transfers.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( transfers);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/mmpaymkttransfers/promotion/transfers")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -425,7 +426,7 @@ public class PayMchAPI extends BaseAPI {
 		pappayapply.setSign(sign);
 		String secapiPayRefundXML = XMLConverUtil.convertToXML( pappayapply);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/pay/pappayapply")
 				.setEntity(new StringEntity(secapiPayRefundXML, Charset.forName("utf-8")))
 				.build();
@@ -444,7 +445,7 @@ public class PayMchAPI extends BaseAPI {
 		mchOrderquery.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(mchOrderquery);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/pay/paporderquery")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();
@@ -463,7 +464,7 @@ public class PayMchAPI extends BaseAPI {
 		papayQuerycontract.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(papayQuerycontract);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/papay/querycontract")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();
@@ -482,7 +483,7 @@ public class PayMchAPI extends BaseAPI {
 		papayDeletecontract.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(papayDeletecontract);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/papay/deletecontract")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();
@@ -501,7 +502,7 @@ public class PayMchAPI extends BaseAPI {
 		papayContractbill.setSign(sign);
 		String closeorderXML = XMLConverUtil.convertToXML(papayContractbill);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(xmlHeader)
+				.addHeader(xmlHeader)
 				.setUri(MCH_URI + "/papay/contractbill")
 				.setEntity(new StringEntity(closeorderXML, Charset.forName("utf-8")))
 				.build();

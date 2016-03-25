@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 
+import com.zy17.service.googleservice.GaeHttpClient;
 import com.zy17.weixin.bean.BaseResult;
 import com.zy17.weixin.bean.media.Media;
 import com.zy17.weixin.bean.message.ApiAddTemplateResult;
@@ -24,7 +25,6 @@ import com.zy17.weixin.bean.message.massmessage.MassMessage;
 import com.zy17.weixin.bean.message.message.Message;
 import com.zy17.weixin.bean.message.templatemessage.TemplateMessage;
 import com.zy17.weixin.bean.message.templatemessage.TemplateMessageResult;
-import com.zy17.weixin.client.LocalHttpClient;
 import com.zy17.weixin.util.JsonUtil;
 
 /**
@@ -50,12 +50,12 @@ public class MessageAPI extends BaseAPI {
      */
     public static BaseResult messageCustomSend(String access_token, String messageJson) {
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/message/custom/send")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
     }
 
     /**
@@ -83,12 +83,12 @@ public class MessageAPI extends BaseAPI {
         String str = JsonUtil.toJSONString(articles);
         String messageJson = "{\"articles\":" + str + "}";
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/media/uploadnews")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, Media.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, Media.class);
     }
 
     /**
@@ -102,12 +102,12 @@ public class MessageAPI extends BaseAPI {
     public static Media mediaUploadvideo(String access_token, Uploadvideo uploadvideo) {
         String messageJson = JsonUtil.toJSONString(uploadvideo);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(MEDIA_URI + "/cgi-bin/media/uploadvideo")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, Media.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, Media.class);
     }
 
     /**
@@ -120,12 +120,12 @@ public class MessageAPI extends BaseAPI {
      */
     public static MessageSendResult messageMassSendall(String access_token, String messageJson) {
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/message/mass/sendall")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, MessageSendResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, MessageSendResult.class);
     }
 
     /**
@@ -151,12 +151,12 @@ public class MessageAPI extends BaseAPI {
      */
     public static MessageSendResult messageMassSend(String access_token, String messageJson) {
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/message/mass/send")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, MessageSendResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, MessageSendResult.class);
     }
 
     /**
@@ -186,12 +186,12 @@ public class MessageAPI extends BaseAPI {
     public static BaseResult messageMassDelete(String access_token, String msgid) {
         String messageJson = "{\"msgid\":" + msgid + "}";
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/message/mass/delete")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
     }
 
     /**
@@ -205,12 +205,12 @@ public class MessageAPI extends BaseAPI {
     public static TemplateMessageResult messageTemplateSend(String access_token, TemplateMessage templateMessage) {
         String messageJson = JsonUtil.toJSONString(templateMessage);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/message/template/send")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, TemplateMessageResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, TemplateMessageResult.class);
     }
 
     /**
@@ -273,12 +273,12 @@ public class MessageAPI extends BaseAPI {
         }
         String messageJson = JsonUtil.toJSONString(map);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/template/api_set_industry")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
     }
 
     /**
@@ -295,7 +295,7 @@ public class MessageAPI extends BaseAPI {
                 .setUri(BASE_URI + "/cgi-bin/template/get_industry")
                 .addParameter(getATPN(), access_token)
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, GetIndustryResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, GetIndustryResult.class);
     }
 
     /**
@@ -311,12 +311,12 @@ public class MessageAPI extends BaseAPI {
     public static ApiAddTemplateResult templateApi_add_template(String access_token, String template_id_short) {
         String json = String.format("{\"template_id_short\":\"%s\"}", template_id_short);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/template/api_add_template")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(json, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, ApiAddTemplateResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, ApiAddTemplateResult.class);
     }
 
     /**
@@ -333,7 +333,7 @@ public class MessageAPI extends BaseAPI {
                 .setUri(BASE_URI + "/cgi-bin/template/get_all_private_template")
                 .addParameter(getATPN(), access_token)
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, GetAllPrivateTemplateResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, GetAllPrivateTemplateResult.class);
     }
 
     /**
@@ -349,12 +349,12 @@ public class MessageAPI extends BaseAPI {
     public static BaseResult templateDel_private_template(String access_token, String template_id) {
         String json = String.format("{\"template_id\":\"%s\"}", template_id);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/template/del_private_template")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(json, Charset.forName("utf-8")))
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, BaseResult.class);
     }
 
 }

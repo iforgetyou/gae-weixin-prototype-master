@@ -1,8 +1,14 @@
 package com.zy17.service.googleservice;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
+import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.GetRequest;
+import com.google.appengine.api.search.GetResponse;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.PutException;
@@ -16,7 +22,7 @@ import com.google.appengine.api.search.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by zhangyan53 on 2016/3/11.
+ * Created by zy17 on 2016/3/11.
  */
 @Slf4j
 @Component
@@ -42,7 +48,7 @@ public class DocIndexService {
         Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
         // Build the QueryOptions
         QueryOptions options = QueryOptions.newBuilder()
-                .setLimit(1)
+                .setLimit(3)
                 .build();
         Query query = Query.newBuilder().setOptions(options).build(queryString);
         Results<ScoredDocument> results = index.search(query);
@@ -51,4 +57,44 @@ public class DocIndexService {
         }
         return null;
     }
+
+    /**
+     * 擅长索引
+     *
+     * @param indexName
+     */
+    public void deleteIndex(String indexName) {
+        IndexSpec indexSpec = IndexSpec.newBuilder().setName(indexName).build();
+        Index index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
+
+        List<String> docIds = new ArrayList<>();
+
+        // Return a set of doc_ids.
+        GetResponse<Document> response =
+                index.getRange(GetRequest.newBuilder().setReturningIdsOnly(true));
+        int totalSize = response.getResults().size();
+        if (response == null || totalSize <= 0) {
+            return;
+        }
+
+        for (Document doc : response) {
+            docIds.add(doc.getId());
+        }
+
+        // 分页批量删除
+        int pageSize = 200;
+        for (int i = 0; i < totalSize; ) {
+            int limit;
+            if (i + pageSize > totalSize) {
+                limit = totalSize;
+            } else {
+                limit = i + pageSize;
+            }
+            // 范围删除
+            index.delete(docIds.subList(i, limit));
+            i += pageSize;
+        }
+
+    }
+
 }

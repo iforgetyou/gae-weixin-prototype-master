@@ -6,8 +6,8 @@ package com.zy17.weixin.api;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 
+import com.zy17.service.googleservice.GaeHttpClient;
 import com.zy17.weixin.bean.token.Token;
-import com.zy17.weixin.client.LocalHttpClient;
 
 public class TokenAPI extends BaseAPI {
 
@@ -20,13 +20,13 @@ public class TokenAPI extends BaseAPI {
      * @return
      */
     public static Token token(String appid, String secret) {
-        HttpUriRequest httpUriRequest = RequestBuilder.post()
+        HttpUriRequest httpUriRequest = RequestBuilder.get()
                 .setUri(BASE_URI + "/cgi-bin/token")
                 .addParameter("grant_type", "client_credential")
                 .addParameter("appid", appid)
                 .addParameter("secret", secret)
                 .build();
-        return LocalHttpClient.executeJsonResult(httpUriRequest, Token.class);
+        return GaeHttpClient.executeJsonResult(httpUriRequest, Token.class);
     }
 
 }

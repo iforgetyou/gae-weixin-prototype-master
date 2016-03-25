@@ -1,10 +1,9 @@
-package com.zy17.service.impl;
+package com.zy17.service.msghandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.zy17.dao.ImageItemDao;
-import com.zy17.model.ImageItem;
+import com.zy17.entity.ImageItem;
 import com.zy17.service.WeixinMsgHandle;
 import com.zy17.service.googleservice.CacheService;
 import com.zy17.weixin.bean.message.EventMessage;
@@ -15,10 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 图片消息处理
- * Created by zhangyan53 on 2016/3/11.
+ * Created by zy17 on 2016/3/11.
  */
 @Slf4j
-@Component(value = "image")
 public class ImageMsgHandle implements WeixinMsgHandle {
     @Autowired
     ImageItemDao imageItemDao;
@@ -27,13 +25,16 @@ public class ImageMsgHandle implements WeixinMsgHandle {
 
     @Override
     public boolean canHandle(EventMessage msg) {
-        return true;
+        if (msg.getMsgType().equals(EventMessage.IMAGE)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public String handleMsg(EventMessage msg) {
         ImageItem imageItem = new ImageItem();
-        imageItem.setOpenId(msg.getFromUserName());
+        imageItem.setCreator(msg.getFromUserName());
         imageItem.setMediaId(msg.getMediaId());
         imageItem.setPicUrl(msg.getPicUrl());
 
@@ -44,7 +45,8 @@ public class ImageMsgHandle implements WeixinMsgHandle {
         XMLMessage xmlTextMessage = new XMLTextMessage(
                 msg.getFromUserName(),
                 msg.getToUserName(),
-                "收到图片消息,请回复文字,给图片添加标签");
+                "收到图片,请回复文字添加标签");
+
         //回复
         return xmlTextMessage.toXML();
     }

@@ -24,7 +24,7 @@ public class ShorturlAPI extends BaseAPI {
 	public static Shorturl shorturl(String access_token, String action, String long_url){
 		String json = "{\"action\":\""+action+"\",\"long_url\":\""+long_url+"\"}";
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(jsonHeader)
+				.addHeader(jsonHeader)
 				.setUri(BASE_URI + "/cgi-bin/shorturl")
 				.addParameter(getATPN(), access_token)
 				.setEntity(new StringEntity(json, Charset.forName("utf-8")))

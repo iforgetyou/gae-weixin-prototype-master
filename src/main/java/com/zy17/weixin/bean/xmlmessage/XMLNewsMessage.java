@@ -43,6 +43,13 @@ public class XMLNewsMessage extends XMLMessage {
 		private String url;
 		private String picurl;
 
+		public Article(String title, String description, String url, String picurl) {
+			this.title = title;
+			this.description = description;
+			this.url = url;
+			this.picurl = picurl;
+		}
+
 		public String getTitle() {
 			return title;
 		}

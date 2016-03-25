@@ -35,7 +35,7 @@ public class PayAPI extends BaseAPI {
 	 */
 	private static BaseResult payDelivernotify(String access_token, String delivernotifyJson){
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI + "/pay/delivernotify")
 										.addParameter(PARAM_ACCESS_TOKEN, access_token)
 										.setEntity(new StringEntity(delivernotifyJson, Charset.forName("utf-8")))
@@ -71,7 +71,7 @@ public class PayAPI extends BaseAPI {
 	 */
 	private static OrderInfo payOrderquery(String access_token, String orderqueryJson){
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI + "/pay/orderquery")
 										.addParameter(PARAM_ACCESS_TOKEN, access_token)
 										.setEntity(new StringEntity(orderqueryJson, Charset.forName("utf-8")))

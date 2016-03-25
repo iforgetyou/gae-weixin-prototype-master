@@ -3,7 +3,7 @@ package com.zy17.service;
 import com.zy17.weixin.bean.message.EventMessage;
 
 /**
- * Created by zhangyan53 on 2016/3/11.
+ * Created by zy17 on 2016/3/11.
  */
 public interface WeixinMsgHandle {
     /**

@@ -42,7 +42,7 @@ public class ComponentAPI extends BaseAPI {
                 component_appsecret,
                 component_verify_ticket);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/component/api_component_token")
                 .setEntity(new StringEntity(postJsonData, Charset.forName("utf-8")))
                 .build();
@@ -61,7 +61,7 @@ public class ComponentAPI extends BaseAPI {
         String postJsonData = String.format("{\"component_appid\":\"%1$s\"}",
                 component_appid);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/component/api_create_preauthcode")
                 .addParameter("component_access_token", component_access_token)
                 .setEntity(new StringEntity(postJsonData, Charset.forName("utf-8")))
@@ -84,7 +84,7 @@ public class ComponentAPI extends BaseAPI {
                 component_appid,
                 authorization_code);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/component/api_query_auth")
                 .addParameter("component_access_token", component_access_token)
                 .setEntity(new StringEntity(postJsonData, Charset.forName("utf-8")))
@@ -111,7 +111,7 @@ public class ComponentAPI extends BaseAPI {
                 "{\"component_appid\":\"%1$s\",\"authorizer_appid\":\"%2$s\",\"authorizer_refresh_token\":\"%3$s\"}",
                 component_appid, authorizer_appid, authorizer_refresh_token);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/component/api_authorizer_token")
                 .addParameter("component_access_token", component_access_token)
                 .setEntity(new StringEntity(postJsonData, Charset.forName("utf-8")))
@@ -134,7 +134,7 @@ public class ComponentAPI extends BaseAPI {
         String postJsonData = String.format("{\"component_appid\":\"%1$s\",\"authorizer_appid\":\"%2$s\"}",
                 component_appid, authorizer_appid);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/component/api_get_authorizer_info")
                 .addParameter("component_access_token", component_access_token)
                 .setEntity(new StringEntity(postJsonData, Charset.forName("utf-8")))
@@ -160,7 +160,7 @@ public class ComponentAPI extends BaseAPI {
                 String.format("{\"component_appid\":\"%1$s\",\"authorizer_appid\":\"%2$s\",\"option_name\":\"%3$s\"}",
                         component_appid, authorizer_appid, option_name);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/component/api_get_authorizer_option")
                 .addParameter("component_access_token", component_access_token)
                 .setEntity(new StringEntity(postJsonData, Charset.forName("utf-8")))
@@ -188,7 +188,7 @@ public class ComponentAPI extends BaseAPI {
                 "{\"component_appid\":\"%1$s\",\"authorizer_appid\":\"%2$s\",\"option_name\":\"%3$s\",\"option_value\":\"%4$s\"}",
                 component_appid, authorizer_appid, option_name, option_value);
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/component/api_set_authorizer_option")
                 .addParameter("component_access_token", component_access_token)
                 .setEntity(new StringEntity(postJsonData, Charset.forName("utf-8")))

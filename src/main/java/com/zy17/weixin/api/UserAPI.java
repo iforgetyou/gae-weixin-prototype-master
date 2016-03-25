@@ -69,7 +69,7 @@ public class UserAPI extends BaseAPI{
 		}
 		sb.append("]}");
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-				.setHeader(jsonHeader)
+				.addHeader(jsonHeader)
 				.setUri(BASE_URI+"/cgi-bin/user/info/batchget")
 				.addParameter(getATPN(),access_token)
 				.setEntity(new StringEntity(sb.toString(), Charset.forName("utf-8")))
@@ -87,7 +87,7 @@ public class UserAPI extends BaseAPI{
 	public static BaseResult userInfoUpdateremark(String access_token, String openid, String remark){
 		String postJson = String.format("{\"openid\":\"%1$s\",\"remark\":\"%2$s\"}", openid,remark);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI+"/cgi-bin/user/info/updateremark")
 										.addParameter(getATPN(), access_token)
 										.setEntity(new StringEntity(postJson, Charset.forName("utf-8")))
@@ -104,7 +104,7 @@ public class UserAPI extends BaseAPI{
 	public static Group groupsCreate(String access_token, String name){
 		String groupJson = String.format("{\"group\":{\"name\":\"%1$s\"}}",name);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI+"/cgi-bin/groups/create")
 										.addParameter(getATPN(), access_token)
 										.setEntity(new StringEntity(groupJson, Charset.forName("utf-8")))
@@ -134,7 +134,7 @@ public class UserAPI extends BaseAPI{
 	public static Group groupsGetid(String access_token, String openid){
 		String groupJson = String.format("{\"openid\":\"%1$s\"}",openid);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI+"/cgi-bin/groups/getid")
 										.addParameter(getATPN(), access_token)
 										.setEntity(new StringEntity(groupJson, Charset.forName("utf-8")))
@@ -152,7 +152,7 @@ public class UserAPI extends BaseAPI{
 	public static BaseResult groupsUpdate(String access_token, String id, String name){
 		String groupJson = "{\"group\":{\"id\":"+id+",\"name\":\""+name+"\"}}";
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI+"/cgi-bin/groups/update")
 										.addParameter(getATPN(), access_token)
 										.setEntity(new StringEntity(groupJson, Charset.forName("utf-8")))
@@ -170,7 +170,7 @@ public class UserAPI extends BaseAPI{
 	public static BaseResult groupsMembersUpdate(String access_token, String openid, String to_groupid){
 		String groupJson = "{\"openid\":\""+openid+"\",\"to_groupid\":"+to_groupid+"}";
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI+"/cgi-bin/groups/members/update")
 										.addParameter(getATPN(), access_token)
 										.setEntity(new StringEntity(groupJson, Charset.forName("utf-8")))
@@ -190,7 +190,7 @@ public class UserAPI extends BaseAPI{
 		String openidListStr = JsonUtil.toJSONString(openid_list);
 		String groupJson = "{\"openid_list\":"+openidListStr+",\"to_groupid\":"+to_groupid+"}";
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI+"/cgi-bin/groups/members/batchupdate")
 										.addParameter(getATPN(), access_token)
 										.setEntity(new StringEntity(groupJson, Charset.forName("utf-8")))
@@ -207,7 +207,7 @@ public class UserAPI extends BaseAPI{
 	public static BaseResult groupsDelete(String access_token, String id){
 		String groupJson = String.format("{\"group\":{\"id\":%1$s}}",id);
 		HttpUriRequest httpUriRequest = RequestBuilder.post()
-										.setHeader(jsonHeader)
+										.addHeader(jsonHeader)
 										.setUri(BASE_URI+"/cgi-bin/groups/delete")
 										.addParameter(getATPN(), access_token)
 										.setEntity(new StringEntity(groupJson, Charset.forName("utf-8")))

@@ -16,7 +16,8 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
         http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
         http://www.springframework.org/schema/data/jpa
-        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+http://www.w3.org/2001/XMLSchema-instance ">
     <description>WX Service Configration</description>
 
     <context:component-scan base-package="com.zy17"/>
@@ -26,9 +27,21 @@
                      location="classpath:/wx.properties"/>
 
     <!--微信消息处理-->
-    <util:map id="msgHandleMap">
-        <entry key="default" value-ref="default"/>
-        <entry key="text" value-ref="text"/>
-    </util:map>
+    <util:list id="msgHandlers">
+        <bean class="com.zy17.service.msghandler.SubscribeEventHandle"/>
+        <bean class="com.zy17.service.msghandler.VoiceMsgHandle"/>
+        <bean class="com.zy17.service.msghandler.GuessCmdMsgHandle"/>
+        <bean class="com.zy17.service.msghandler.HelpCmdMsgHandle"/>
+        <bean class="com.zy17.service.msghandler.ClearCmdMsgHandle"/>
+        <bean class="com.zy17.service.msghandler.ShortvideoMsgHandle"/>
+        <bean class="com.zy17.service.msghandler.ImageMsgHandle"/>
+        <bean class="com.zy17.service.msghandler.TextMsgHandle"/>
+        <bean class="com.zy17.service.msghandler.DefaultMsgHandle"/>
+        <!--<ref bean="subscribeEventHandle"/>-->
+        <!--<ref bean="voiceMsgHandle"/>-->
+        <!--<ref bean="imageMsgHandle"/>-->
+        <!--<ref bean="textMsgHandle"/>-->
+        <!--<ref bean="default"/>-->
+    </util:list>
 
 </beans>

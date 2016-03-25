@@ -57,7 +57,7 @@ public class MaterialAPI extends BaseAPI {
         String str = JsonUtil.toJSONString(articles);
         String messageJson = "{\"articles\":" + str + "}";
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/material/add_news")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))
@@ -257,7 +257,7 @@ public class MaterialAPI extends BaseAPI {
         String str = JsonUtil.toJSONString(articles);
         String messageJson = "{\"media_id\":\"" + media_id + "\",\"index\":" + index + ",\"articles\":" + str + "}";
         HttpUriRequest httpUriRequest = RequestBuilder.post()
-                .setHeader(jsonHeader)
+                .addHeader(jsonHeader)
                 .setUri(BASE_URI + "/cgi-bin/material/update_news")
                 .addParameter(getATPN(), access_token)
                 .setEntity(new StringEntity(messageJson, Charset.forName("utf-8")))

@@ -1,7 +1,7 @@
 package com.zy17.service;
 
-import com.zy17.model.User;
+import com.zy17.entity.UserEntity;
 
 public interface UserService {
-    void createUser(User user);
+    void createUser(UserEntity userEntity);
 }
