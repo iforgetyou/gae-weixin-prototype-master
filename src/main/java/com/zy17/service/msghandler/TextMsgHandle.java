@@ -1,7 +1,6 @@
 package com.zy17.service.msghandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -97,7 +96,7 @@ public class TextMsgHandle implements WeixinMsgHandle {
                 for (String tag : tags) {
                     if (tag.equals(content)) {
                         serviceUtil.statistics(msg.getFromUserName(), true, imageItem.getID());
-                        result = serviceUtil.genRandomImage(msg);
+                        result = serviceUtil.convertImageToWeixinMsg(msg);
                         if (result == null) {
                             // 答对了,没有图了,清空缓存
                             cacheUtil.getCache().remove(msg.getFromUserName());

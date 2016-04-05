@@ -32,7 +32,7 @@ public class GuessCmdMsgHandle implements WeixinMsgHandle {
     @Override
     public String handleMsg(EventMessage msg) {
         // 回复随机图片
-        XMLImageMessage result = serviceUtil.genRandomImage(msg);
+        XMLImageMessage result = serviceUtil.convertImageToWeixinMsg(msg);
         if (result == null) {
             return "success";
         }

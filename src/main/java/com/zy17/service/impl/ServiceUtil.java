@@ -27,19 +27,30 @@ public class ServiceUtil {
     CacheService cacheUtil;
 
     /**
-     * 获取随机图片
+     * 转换图片为微信消息
      *
      * @param msg
      *
      * @return
      */
-    public XMLImageMessage genRandomImage(EventMessage msg) {
+    public XMLImageMessage convertImageToWeixinMsg(EventMessage msg) {
+        ImageItem imageItem = genRandomImage(msg.getFromUserName());
+        XMLImageMessage result =
+                new XMLImageMessage(msg.getFromUserName(), msg.getToUserName(), imageItem.getMediaId());
+        return result;
+    }
 
+    /**
+     * 获取随机图片
+     *
+     * @return
+     */
+    public ImageItem genRandomImage(String userName) {
         List<Long> allId = imageItemDao.findAllAvaluableId();
         if (allId.size() == 0) {
             return null;
         }
-        UserStatistics statistics = getStatistics(msg.getFromUserName());
+        UserStatistics statistics = getStatistics(userName);
         allId.removeAll(statistics.getHisIds());
         if (allId.size() == 0) {
             return null;
@@ -47,13 +58,10 @@ public class ServiceUtil {
         Random random = new Random();
         Long oneByRandomId = allId.get(random.nextInt(allId.size()));
         ImageItem randomResult = imageItemDao.findOneById(oneByRandomId);
-        XMLImageMessage result =
-                new XMLImageMessage(msg.getFromUserName(), msg.getToUserName(), randomResult.getMediaId());
         // 放缓存,已发图
-        cacheUtil.getCache().put(msg.getFromUserName(), randomResult);
-        log.debug("put cache his ids :{}", msg.getFromUserName() + randomResult.getID());
-        return result;
-
+        cacheUtil.getCache().put(userName, randomResult);
+        log.debug("put cache his ids :{}", userName + randomResult.getID());
+        return randomResult;
     }
 
     public UserStatistics getStatistics(String fromUserName) {

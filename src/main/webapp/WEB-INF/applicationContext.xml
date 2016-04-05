@@ -28,6 +28,7 @@ http://www.w3.org/2001/XMLSchema-instance ">
 
     <!--微信消息处理-->
     <util:list id="msgHandlers">
+        <bean class="com.zy17.service.msghandler.ExcluedeEventHandle"/>
         <bean class="com.zy17.service.msghandler.SubscribeEventHandle"/>
         <bean class="com.zy17.service.msghandler.VoiceMsgHandle"/>
         <bean class="com.zy17.service.msghandler.GuessCmdMsgHandle"/>
