@@ -19,7 +19,7 @@
     <title>Upload ImageCard</title>
 </head>
 <body>
-<form action="<%= blobstoreService.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+<form action="<%= blobstoreService.createUploadUrl("/blob") %>" method="post" enctype="multipart/form-data">
     <input type="type" name="type">
     <input type="file" name="myFile">
     <input type="submit" value="Submit">

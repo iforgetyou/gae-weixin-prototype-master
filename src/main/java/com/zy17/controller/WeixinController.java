@@ -61,7 +61,7 @@ public class WeixinController {
         return "ok";
     }
 
-    // 用户注册
+    // 微信业务逻辑处理
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST)
     public

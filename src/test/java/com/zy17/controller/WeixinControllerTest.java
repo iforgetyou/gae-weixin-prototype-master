@@ -31,6 +31,6 @@ public class WeixinControllerTest extends GaeBaseTest {
         eventMessage.setCreateTime(1348831860);
         eventMessage.setMsgId("msgid");
         eventMessage.setContent("1");
-        controller.business(signature, timestamp, nonce, eventMessage);
+        String business = controller.business(signature, timestamp, nonce, eventMessage);
     }
 }

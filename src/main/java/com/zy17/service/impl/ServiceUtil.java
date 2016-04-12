@@ -35,6 +35,9 @@ public class ServiceUtil {
      */
     public XMLImageMessage convertImageToWeixinMsg(EventMessage msg) {
         ImageItem imageItem = genRandomImage(msg.getFromUserName());
+        if (imageItem == null) {
+            return null;
+        }
         XMLImageMessage result =
                 new XMLImageMessage(msg.getFromUserName(), msg.getToUserName(), imageItem.getMediaId());
         return result;

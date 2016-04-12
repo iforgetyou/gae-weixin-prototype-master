@@ -45,6 +45,10 @@
     <!--<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">-->
     <!--</bean>-->
 
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
 
     <util:list id="messageConverters">
         <bean class="org.springframework.http.converter.StringHttpMessageConverter">
