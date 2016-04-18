@@ -49,22 +49,25 @@ public class ServiceUtil {
      * @return
      */
     public ImageItem genRandomImage(String userName) {
-        List<Long> allId = imageItemDao.findAllAvaluableId();
+        ImageItem imageItem = new ImageItem();
+        List<Long> allId = imageItemDao.findAllValuableId();
         if (allId.size() == 0) {
+            log.debug("no valuable Id");
             return null;
         }
         UserStatistics statistics = getStatistics(userName);
         allId.removeAll(statistics.getHisIds());
         if (allId.size() == 0) {
+            log.debug("user guessed valuable Id:{}", statistics.getHisIds());
             return null;
         }
         Random random = new Random();
         Long oneByRandomId = allId.get(random.nextInt(allId.size()));
-        ImageItem randomResult = imageItemDao.findOneById(oneByRandomId);
+        imageItem = imageItemDao.findOneById(oneByRandomId);
         // 放缓存,已发图
-        cacheUtil.getCache().put(userName, randomResult);
-        log.debug("put cache his ids :{}", userName + randomResult.getID());
-        return randomResult;
+        cacheUtil.getCache().put(userName, imageItem);
+        log.debug("put cache his ids :{}", userName + imageItem.getID());
+        return imageItem;
     }
 
     public UserStatistics getStatistics(String fromUserName) {

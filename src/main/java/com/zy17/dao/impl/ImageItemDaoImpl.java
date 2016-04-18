@@ -45,7 +45,7 @@ public class ImageItemDaoImpl extends BaseDaoImpl<ImageItem> implements ImageIte
     }
 
     @Override
-    public List<Long> findAllAvaluableId() {
+    public List<Long> findAllValuableId() {
         // 暂时只查找临时资源
         Query.Filter weixinMaterialFilter =
                 new Query.FilterPredicate("weixinMaterial",

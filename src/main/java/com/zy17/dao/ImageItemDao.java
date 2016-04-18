@@ -14,7 +14,7 @@ public interface ImageItemDao extends BaseDao<ImageItem> {
      */
     List<ImageItem> findOneByTag(String tag);
 
-    List<Long> findAllAvaluableId();
+    List<Long> findAllValuableId();
     List<Long> findAllId();
 
 }

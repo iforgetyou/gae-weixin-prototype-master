@@ -2,8 +2,6 @@ package com.zy17.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -24,27 +23,8 @@ import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Field;
-import com.zy17.dao.CelebrityDao;
 import com.zy17.dao.ImageItemDao;
-import com.zy17.dao.MovieEntityDao;
-import com.zy17.douban.api.movie.RankApi;
-import com.zy17.douban.bean.CelebrityResult;
-import com.zy17.douban.bean.MovieTop250Result;
-import com.zy17.douban.bean.SimpleSubject;
-import com.zy17.douban.convert.CelebrityEntityConvert;
-import com.zy17.douban.convert.MovieEntityConvert;
-import com.zy17.entity.CelebrityEntity;
 import com.zy17.entity.ImageItem;
-import com.zy17.entity.MovieSearchResultEntity;
-import com.zy17.service.googleservice.CacheService;
-import com.zy17.service.googleservice.DocIndexService;
-import com.zy17.service.msghandler.HelpCmdMsgHandle;
-import com.zy17.weixin.api.MessageAPI;
-import com.zy17.weixin.bean.message.massmessage.MassMessage;
-import com.zy17.weixin.bean.message.massmessage.MassTextMessage;
-import com.zy17.weixin.support.TokenManager;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,11 +32,13 @@ import lombok.extern.slf4j.Slf4j;
  * gae上传图片后回调
  */
 @Controller
-@RequestMapping("/images")
+@RequestMapping("/blob")
 @Slf4j
 public class BlobController {
     private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     private ImagesService imagesService = ImagesServiceFactory.getImagesService();
+    @Autowired
+    ImageItemDao dao;
 
     /**
      * 从jsp中取图片文件,转存到
@@ -68,23 +50,40 @@ public class BlobController {
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public void upload(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void upload(HttpServletRequest req, HttpServletResponse res,
+                       @RequestParam(value = "tags", required = true) String tags,
+                       @RequestParam(value = "type", required = true) String type,
+                       @RequestParam(value = "files", required = false) MultipartFile[] files
+    )
+            throws ServletException, IOException {
+        // 多图片上传
+        for (MultipartFile file : files) {
+            Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
+            List<BlobKey> blobKeys = blobs.get(file.getName());
 
-        Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
-        List<BlobKey> blobKeys = blobs.get("myFile");
+            if (blobKeys == null || blobKeys.isEmpty()) {
+                res.sendRedirect("/");
+                return;
+            }
+            for (BlobKey blobKey : blobKeys) {
+                log.info("serve blob key:{}", blobKey);
+                // 存blob
+                blobstoreService.serve(blobKey, res);
+                // 更新blob-key字段
+                String imageUrl = imagesService.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey));
+                // 通过用图片访问url,不受权限控制
+                log.info("serve blob imageUrl:{}", imageUrl);
+                // 更新gae image url字段
+                ImageItem imageEntity = new ImageItem();
+                imageEntity.setCreator("admin");
+                imageEntity.setPicUrl(imageUrl);
+                imageEntity.setTags(tags);
+                imageEntity.setType(type);
+                imageEntity.setBlobKey(blobKey.getKeyString());
+                dao.save(imageEntity);
 
-        if (blobKeys == null || blobKeys.isEmpty()) {
-            res.sendRedirect("/");
-        } else {
-            BlobKey blobKey = blobKeys.get(0);
-            log.info("serve blob key:{}", blobKey);
-            // 存blob
-            blobstoreService.serve(blobKey, res);
-            // 更新blob-key字段
-            String imageUrl = imagesService.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey));
-            // 通过用图片访问url,不受权限控制
-            log.info("serve blob imageUrl:{}", imageUrl);
-            // 更新gae image url字段
+                // todo 请求豆瓣接口 保存影人信息 后续了解更多时用
+            }
         }
     }
 

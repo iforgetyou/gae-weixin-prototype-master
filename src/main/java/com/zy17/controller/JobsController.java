@@ -88,7 +88,7 @@ public class JobsController {
 
         log.info("删除所有索引");
         // 重建库里所有数据
-        List<Long> allId = imageItemDao.findAllAvaluableId();
+        List<Long> allId = imageItemDao.findAllValuableId();
         for (Long id : allId) {
             ImageItem imageItem = imageItemDao.findOneById(id);
             // 刷新缓存

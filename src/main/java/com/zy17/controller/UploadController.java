@@ -21,6 +21,7 @@ public class UploadController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getPeopleListInfo(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mv = new ModelAndView("uploadImageGuessCard");
+        //        ModelAndView mv = new ModelAndView("upload");
         return mv;
     }
 }

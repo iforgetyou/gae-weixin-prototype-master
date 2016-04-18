@@ -32,6 +32,8 @@ public class ImageItem extends BaseEntity {
     private String type;
     // 图片标签列表
     private String tags;
+    // gae blobkey
+    private String blobKey;
 
     // 是否微信永久资源
     private boolean weixinMaterial;

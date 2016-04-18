@@ -49,6 +49,8 @@
         <property name="prefix" value="/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+          p:defaultEncoding="UTF-8"/>
 
     <util:list id="messageConverters">
         <bean class="org.springframework.http.converter.StringHttpMessageConverter">

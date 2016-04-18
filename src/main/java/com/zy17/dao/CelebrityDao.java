@@ -12,5 +12,6 @@ public interface CelebrityDao extends BaseDao<CelebrityEntity> {
 
     @Override
     CelebrityEntity findOneById(long id);
-    CelebrityEntity findOneByCelebrityId(String  celebrityId);
+
+    CelebrityEntity findOneByCelebrityId(String celebrityId);
 }
