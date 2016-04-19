@@ -7,5 +7,6 @@ import com.google.appengine.api.datastore.Key;
  */
 public interface BaseDao<T> {
     Key save(T imageEntity);
+    void asyncSave(T imageEntity);
     T findOneById(long id);
 }

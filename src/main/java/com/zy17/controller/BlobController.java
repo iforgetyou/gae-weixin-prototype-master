@@ -52,39 +52,38 @@ public class BlobController {
     @RequestMapping(method = RequestMethod.POST)
     public void upload(HttpServletRequest req, HttpServletResponse res,
                        @RequestParam(value = "tags", required = true) String tags,
-                       @RequestParam(value = "type", required = true) String type,
-                       @RequestParam(value = "files", required = false) MultipartFile[] files
+                       @RequestParam(value = "type", required = true) String type
     )
             throws ServletException, IOException {
         // 多图片上传
-        for (MultipartFile file : files) {
-            Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
-            List<BlobKey> blobKeys = blobs.get(file.getName());
+        //        for (MultipartFile file : files) {
+        Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
+        List<BlobKey> blobKeys = blobs.get("files");
 
-            if (blobKeys == null || blobKeys.isEmpty()) {
-                res.sendRedirect("/");
-                return;
-            }
-            for (BlobKey blobKey : blobKeys) {
-                log.info("serve blob key:{}", blobKey);
-                // 存blob
-                blobstoreService.serve(blobKey, res);
-                // 更新blob-key字段
-                String imageUrl = imagesService.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey));
-                // 通过用图片访问url,不受权限控制
-                log.info("serve blob imageUrl:{}", imageUrl);
-                // 更新gae image url字段
-                ImageItem imageEntity = new ImageItem();
-                imageEntity.setCreator("admin");
-                imageEntity.setPicUrl(imageUrl);
-                imageEntity.setTags(tags);
-                imageEntity.setType(type);
-                imageEntity.setBlobKey(blobKey.getKeyString());
-                dao.save(imageEntity);
-
-                // todo 请求豆瓣接口 保存影人信息 后续了解更多时用
-            }
+        if (blobKeys == null || blobKeys.isEmpty()) {
+            log.warn("serve blob key is empty :{}", blobKeys);
+            res.sendRedirect("/");
+            return;
         }
+        for (BlobKey blobKey : blobKeys) {
+            log.info("serve blob key:{}", blobKey);
+            // 存blob
+            blobstoreService.serve(blobKey, res);
+            // 更新blob-key字段
+            String imageUrl = imagesService.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey));
+            // 通过用图片访问url,不受权限控制
+            log.info("serve blob imageUrl:{}", imageUrl);
+            // 更新gae image url字段
+            ImageItem imageEntity = new ImageItem();
+            imageEntity.setCreator("admin");
+            imageEntity.setPicUrl(imageUrl);
+            imageEntity.setTags(tags);
+            imageEntity.setType(type);
+            imageEntity.setBlobKey(blobKey.getKeyString());
+            dao.asyncSave(imageEntity);
+            // todo 请求豆瓣接口 保存影人信息 后续了解更多时用
+        }
+        //        }
     }
 
     /**

@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Repository;
 
 import com.google.appengine.api.datastore.Entity;
@@ -31,6 +33,12 @@ public class ImageItemDaoImpl extends BaseDaoImpl<ImageItem> implements ImageIte
         // 缓存Image
         Key save = super.save(imageItem);
         return save;
+    }
+
+    @Override
+    public void asyncSave(ImageItem imageItem) {
+        // 异步存储
+        super.asyncSave(imageItem);
     }
 
     @Override
