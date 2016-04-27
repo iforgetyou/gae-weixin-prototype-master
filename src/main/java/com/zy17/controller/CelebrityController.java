@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.zy17.dao.ImageItemDao;
 import com.zy17.dto.AnswerResultDto;
 import com.zy17.dto.CelebrityImageDto;
-import com.zy17.dto.ImagecardVo;
+import com.zy17.dto.ImagecardDto;
 import com.zy17.entity.ImageItem;
 import com.zy17.service.impl.ServiceUtil;
 
@@ -32,10 +32,10 @@ public class CelebrityController {
     @RequestMapping(method = RequestMethod.GET)
     public
     @ResponseBody
-    CelebrityImageDto getImage(@RequestParam(value = "username") String username) {
+    CelebrityImageDto getImage(@RequestParam(value = "userName") String username) {
         ImageItem imageItem = util.genRandomImage(username);
         if (imageItem == null) {
-            log.info("no image item for username:{}", username);
+            log.info("no image item for userName:{}", username);
             return null;
         }
         CelebrityImageDto dto = new CelebrityImageDto();
@@ -48,34 +48,34 @@ public class CelebrityController {
     @RequestMapping(value = "/card", method = {RequestMethod.POST, RequestMethod.GET})
     public
     @ResponseBody
-    ImagecardVo card(@RequestParam(value = "username", required = false) String username) {
-        ImagecardVo imagecardVo = new ImagecardVo();
+    ImagecardDto card(@RequestParam(value = "userName", required = false) String username) {
+        ImagecardDto imagecardDto = new ImagecardDto();
         ImageItem imageItem = util.genRandomImage(username);
         if (imageItem == null) {
-            log.info("no image item for username:{}", username);
-            imagecardVo.setStatus(ImagecardVo.NoMoreCard);
-            return imagecardVo;
+            log.info("no image item for userName:{}", username);
+            imagecardDto.setStatus(ImagecardDto.NoMoreCard);
+            return imagecardDto;
         }
         String tags = imageItem.getTags();
         // 找到真实答案
         // 找到其他同类型答案
         // 混合设置返回结果
-        imagecardVo.setCardId(String.valueOf(imageItem.getID()));
-        imagecardVo.setAnswerA(tags);
-        imagecardVo.setAnswerB("库里");
-        imagecardVo.setAnswerC("詹姆斯");
-        imagecardVo.setAnswerD("周立波");
-        imagecardVo.setImage(imageItem.getPicUrl());
-        log.info("return card result" + JSON.toJSONString(imagecardVo));
-        return imagecardVo;
+        imagecardDto.setCardId(String.valueOf(imageItem.getID()));
+        imagecardDto.setAnswerA(tags);
+        imagecardDto.setAnswerB("库里");
+        imagecardDto.setAnswerC("詹姆斯");
+        imagecardDto.setAnswerD("周立波");
+        imagecardDto.setImage(imageItem.getPicUrl());
+        log.info("return card result" + JSON.toJSONString(imagecardDto));
+        return imagecardDto;
     }
 
     @RequestMapping(value = "/check", method = {RequestMethod.POST, RequestMethod.GET})
     public
     @ResponseBody
-    AnswerResultDto guess(@RequestParam(value = "username", required = false) String username,
+    AnswerResultDto guess(@RequestParam(value = "userName", required = false) String username,
                           @RequestParam(value = "cardid", required = false) long cardId,
-                          @RequestParam(value = "answer_name", required = false) String answerName) {
+                          @RequestParam(value = "answerName", required = false) String answerName) {
         log.info("check answer cardId:{} ,user:{} ,guess:{}", new Object[] {cardId, username, answerName});
         ImageItem oneById = dao.findOneById(cardId);
 

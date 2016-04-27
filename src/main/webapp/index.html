@@ -5,71 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--<link rel="stylesheet" href="weixin/css/weui.min.css"/>-->
     <!-- 新 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <!--<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">-->
     <!-- 可选的Bootstrap主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     <!--<link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">-->
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <!--<script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>-->
-    <script src="bootstrap/jquery/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <!--<script src="bootstrap/jquery/jquery.min.js"></script>-->
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <!--<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!--<script src="bootstrap/js/bootstrap.min.js"></script>-->
     <!--<script type="text/javascript" src="/js/groupon/guess.js?v=$!{jsversion}"></script>-->
 </head>
 <body>
 
 <div class="container">
-    <input type="hidden" value="123" name="username" id="username"/>
-    <form class="form-horizontal">
-        <fieldset>
-            <div class="control-group">
-                <div class="controls">
-                    <input type="hidden" id="_username" value=""/>
-                    <input type="hidden" id="_cardId" value=""/>
-                    <img id="celebrity"
-                         alt="猜猜我是谁?"
-                         src=""
-                         class="img-responsive  center-block"/>
-                    <!-- Multiple Radios -->
-                    <label class="radio" style=" text-align:center; vertical-align:middle">
-                        <input type="radio" value="A" name="group" onclick="answer()">
-                        <span id="answerA"></span>
-                    </label>
-                    <label class="radio" style=" text-align:center; vertical-align:middle">
-                        <input type="radio" value="B" name="group" onclick="answer()">
-                        <span id="answerB"></span>
-                    </label>
-                    <label class="radio" style=" text-align:center; vertical-align:middle">
-                        <input type="radio" value="C" name="group" onclick="answer()">
-                        <span id="answerC"></span>
-                    </label>
-                    <label class="radio" style=" text-align:center; vertical-align:middle">
-                        <input type="radio" value="D" name="group" onclick="answer()">
-                        <span id="answerD"></span>
-                    </label>
-                </div>
-            </div>
-        </fieldset>
-    </form>
+    <input type="hidden" id="_username" value=""/>
+    <input type="hidden" id="_cardId" value=""/>
+
+    <img id="celebrity" alt="好神秘的明星" src="" class="img-responsive  center-block"/>
+    <button id="answerA" class="btn btn-success btn-large btn-block" type="button"></button>
+    <button id="answerB" class="btn btn-success btn-large btn-block" type="button"></button>
+    <button id="answerC" class="btn btn-success btn-large btn-block" type="button"></button>
+    <button id="answerD" class="btn btn-success btn-large btn-block" type="button"></button>
 </div>
 
 </body>
 </html>
 
 <script type="text/javascript">
-    userName = GetQueryString("username");
+    var answerName, userName;
+    userName = GetQueryString("userName");
+    if (userName == null) {
+        userName = Math.round(Math.random() * 1000000) + 1000000
+    }
 
+    // 初始化, 加载卡片
+    $(document).ready(
+            init(), reloadcard()
+    )
+
+    function init() {
+        document.getElementById("answerA").onclick = answer;
+        document.getElementById("answerB").onclick = answer;
+        document.getElementById("answerC").onclick = answer;
+        document.getElementById("answerD").onclick = answer;
+    }
 
     // 判断答案是否正确
-    function answer() {
-        answer_choowse = $("input[name='group']:checked").val();
-        answer_name = $("#answer" + answer_choowse).text();
+    function answer(event) {
+        var target;//触发事件的对象引用
+        if (!event) {
+            var event = window.event;//获得当前事件(IE)
+        }
+        if (event.target) {//IE没有target
+            target = event.target;
+        } else if (event.srcElement) {//适用于IE
+            target = event.srcElement;
+        }
+
+        //对触发事件的对象进行操作
+        target.disabled = "disabled";
+
+        answerName = target.innerHTML
         var cardId = document.getElementById('_cardId').value;
 
         $.ajax({
-            url: '/celebrity/check?answer_name=' + answer_name + "&username=" + username + "&cardid=" + cardId,
+            url: '/celebrity/check?answer_name=' + answerName + "&username=" + userName + "&cardid=" + cardId,
             type: 'POST',
             dataType: "json",
             contentType: "application/json",
@@ -84,14 +87,12 @@
             }
         })
     }
-    // 初始化, 加载卡片
-    $(document).ready(reloadcard());
+
 
     function reloadcard() {
-        username = GetQueryString("username");
-        $("#_username").html(username);
+        $("#_username").html(userName);
         $.ajax({
-            url: '/celebrity/card?username=' + username,
+            url: '/celebrity/card?username=' + userName,
             type: 'POST',
             dataType: "json",
             contentType: "application/json",
@@ -104,7 +105,7 @@
                     $("#answerC").html(data.answerC);
                     $("#answerD").html(data.answerD);
                     $("#_cardId").val(data.cardId);
-                    $("input[type='group']").prop("checked",false);
+                    $("input[type='group']").prop("checked", false);
                 } else {
                     alert("全部回答正确");
                 }

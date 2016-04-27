@@ -22,7 +22,7 @@ public class WeixinControllerTest extends GaeBaseTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         request.setMethod("POST");
-        request.addParameter("username", "aa");
+        request.addParameter("userName", "aa");
         request.addParameter("password", "bb");
         EventMessage eventMessage = new EventMessage();
         eventMessage.setMsgType(EventMessage.TEXT);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Baidu, Inc. All Rights Reserved.
+ * Copyright (C) 2016 , Inc. All Rights Reserved.
  */
 package com.zy17.weixin.bean.qrcode;
 
